@@ -1,0 +1,4 @@
+const INIT_JOKES = "INIT_JOKES";
+const RANDOM_JOKE = "RANDOM_JOKE";
+
+export { INIT_JOKES, RANDOM_JOKE };
