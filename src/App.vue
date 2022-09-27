@@ -1,33 +1,54 @@
 <template>
   <img alt="Vue logo" src="./assets/logo.png" />
   <h2>JOKESTER</h2>
+  <span v-for="(type, index) in types" :key="index">
+    <input type="checkbox" :value="type" checked v-model="checkedTypes" />
+    <label>{{ type }}</label
+    >&nbsp;
+  </span>
   <div class="joke-actions">
     <div class="joke-btn" @click="randomJoke">Add Random Joke</div>
     <div class="joke-btn" @click="initJokes">Add Random Ten Joke</div>
   </div>
   <div class="joke-container">
-    <JokeCard v-for="(joke, index) in jokes" :jokeProps="joke" :key="index" />
+    <JokeCard
+      v-for="(joke, index) in jokesWithType"
+      :jokeProps="joke"
+      :key="index"
+      :indexProps="index"
+    />
   </div>
 </template>
 
 <script>
 import JokeCard from "./components/JokeCard.vue";
-import store from "./store";
-import { mapActions } from "vuex";
+import { mapActions, mapState } from "vuex";
 
 export default {
   name: "App",
   data() {
     return {
-      jokes: store.state.jokes,
+      types: ["general", "knock-knock", "programing"],
+      checkedTypes: ["general", "knock-knock", "programing"],
     };
   },
   methods: mapActions(["randomJoke", "initJokes"]),
+  computed: {
+    ...mapState(["jokes"]),
+    jokesWithType() {
+      return this.jokes.filter((el) => {
+        return this.checkedTypes.includes(el.type);
+      });
+    },
+  },
   components: {
     JokeCard,
   },
   created() {
     this.randomJoke();
+  },
+  mounted() {
+    window.__appVue = this;
   },
 };
 </script>
